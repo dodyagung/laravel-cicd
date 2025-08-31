@@ -1,0 +1,13 @@
+services:
+  php:
+    build:
+      context: .
+      target: development
+      args:
+        # UID and GID must be set as environment variables on the host machine
+        USER_ID: $UID
+        GROUP_ID: $GID
+    ports:
+      - 8080:8080
+    volumes:
+      - .:/var/www/html
