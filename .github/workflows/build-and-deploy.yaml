@@ -102,6 +102,7 @@ jobs:
           helm upgrade $RELEASE_NAME helm-charts \
             --install \
             --set image.tag="$TIMESTAMP" \
+            --set "env[0].name=APP_KEY" --set "env[0].value=${{ secrets.APP_KEY }}" \
             --atomic \
             --history-max 2 \
             --debug
