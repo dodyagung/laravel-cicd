@@ -13,7 +13,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set up Docker Buildx
+      - name: Set up Buildx
         uses: docker/setup-buildx-action@v3
 
       - name: Build and push
@@ -22,6 +22,14 @@ jobs:
           push: true
           tags: ghcr.io/${{ github.repository }}:latest
           provenance: false
+
+      - name: Delete untagged, keep latest
+        uses: actions/delete-package-versions@v5
+        with:
+          package-name: ${{ github.repository }}
+          package-type: container
+          delete-only-untagged-versions: true
+          min-versions-to-keep: 0
 
   deploy:
     runs-on: ubuntu-latest
