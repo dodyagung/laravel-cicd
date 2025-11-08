@@ -1,10 +1,9 @@
 services:
-  php:
+  app:
     build:
       context: .
       target: development
       args:
-        # UID and GID must be set as environment variables on the host machine
         USER_ID: $UID
         GROUP_ID: $GID
     ports:
