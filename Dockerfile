@@ -1,7 +1,7 @@
 ############################################
 # Base Image
 ############################################
-FROM serversideup/php:8.4-fpm-nginx-alpine AS base 
+FROM serversideup/php:8.5-fpm-nginx-alpine AS base 
 
 ENV TZ=Asia/Jakarta
 ENV PHP_DATE_TIMEZONE=$TZ
