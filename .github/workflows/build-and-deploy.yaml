@@ -1,4 +1,7 @@
 name: Build and Deploy
+permissions:
+  contents: read
+  packages: write
 
 on: push
 
@@ -49,6 +52,11 @@ jobs:
               --debug \
               --history-max 2 \
               --install \
-              --set image.tag="latest" \
-              --set "env[0].name=APP_KEY" --set "env[0].value=${{ secrets.APP_KEY }}" \
+              --set-string image.tag="latest" \
+              --set-string "env[0].name=APP_KEY" --set-string "env[0].value=${{ secrets.APP_KEY }}" \
+              --set-string podAnnotations.deployedAt="$(TZ='Asia/Jakarta' date +'%Y-%m-%dT%H:%M:%S%z')" \
+              --set-string podAnnotations.deployedBy="${{ github.actor }}" \
+              --set-string podAnnotations.projectBranch="${{ github.ref_name }}" \
+              --set-string podAnnotations.projectCommit="$(echo $GITHUB_SHA | cut -c1-7)" \
+              --set-string podAnnotations.projectPath="${{ github.repository }}" \
               --wait
