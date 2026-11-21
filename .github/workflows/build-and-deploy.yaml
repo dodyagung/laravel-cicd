@@ -5,6 +5,10 @@ permissions:
 
 on: push
 
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
 jobs:
   build:
     strategy:
@@ -76,12 +80,20 @@ jobs:
           docker buildx imagetools create -t ghcr.io/${{ github.repository }}:latest \
             $(printf 'ghcr.io/${{ github.repository }}@sha256:%s ' *)
 
+      - name: Delete old untagged, keep the 2 arch images behind latest
+        uses: actions/delete-package-versions@v5
+        with:
+          package-name: ${{ github.event.repository.name }}
+          package-type: container
+          delete-only-untagged-versions: true
+          min-versions-to-keep: 2
+
   deploy:
     runs-on: ubuntu-26.04
     needs: manifest
     steps:
       - name: Checkout source code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       - name: Deploy to k8s with helm
         uses: WyriHaximus/github-action-helm3@v4
